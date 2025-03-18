@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now,
+    },
+    accountType:{
+        type: String,
+        required: true,
+        trim: true,
     }
 });
 
