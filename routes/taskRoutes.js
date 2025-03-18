@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Task = require('../models/taskModel');
+const Task = require('../models/task');
 
 router.get('/', async (req, res) => {
     try{
@@ -50,3 +50,5 @@ router.delete('/:id', async (req, res) => {
         res.status(400).json({error: 'failed to delete Task'})
     }
 });
+
+module.exports = router;
