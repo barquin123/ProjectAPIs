@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const { schema } = require('./userModel');
+const userSchema = require('./userModel');
 const taskSchema = new mongoose.Schema({
     taskName: {
         type: String,
@@ -6,12 +8,14 @@ const taskSchema = new mongoose.Schema({
         trim: true,
     },
     assignedBy: {
-        type: String,
+        type: schema.Types.ObjectID, 
+        ref: 'User',
         required: true,
         trim: true,
     },
     assignedTo: {
-        type: String,
+        type: schema.Types.ObjectID, 
+        ref: 'User',
         required: true,
         trim: true,
     },
@@ -22,6 +26,10 @@ const taskSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now,
+    },
+    deadLine: {
+        type: Date,
+        required: true,
     }
 });
 
