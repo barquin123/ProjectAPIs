@@ -17,7 +17,6 @@ const taskSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        required: true,
         trim: true,
     },
     createdAt: {

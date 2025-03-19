@@ -5,7 +5,7 @@ const Task = require('../models/task');
 router.get('/', async (req, res) => {
     try{
         const tasks = await Task.find();
-        res.json(Tasks);
+        res.json(tasks);
     }catch(error){
         res.status(500).json({message: error.message}) 
     }
