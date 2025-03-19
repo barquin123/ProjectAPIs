@@ -8,7 +8,7 @@ const userRoutes = require('./routes/userRoutes');
 const dotenv = require('dotenv');
 dotenv.config();
 
-app.use(cors());
+app.use(cors({origin: 'front-end site', methods: 'GET, POST, PUT, DELETE', allowedHeaders: 'Content-Type, Authorization', credentials: true}));
 app.use(express.json());
 // mongodb+srv://<username>:<password>@cluster0.mongodb.net/TaskManagement?retryWrites=true&w=majority
 const db = process.env.MONGODB_URI || 'mongodb://localhost:27017/TaskManagement';
