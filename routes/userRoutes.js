@@ -12,6 +12,34 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Get all members
+router.get('/members', async (req, res) => {
+    try {
+        const members = await User.find({ accountType: 'member' }); // Query by accountType 'member'
+        if (!members.length) {
+            return res.status(404).json({ message: 'No members found' });
+        }
+        res.json(members); // Send the list of members
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error fetching members', error: err.message });
+    }
+});
+
+// Get all members
+router.get('/admin', async (req, res) => {
+    try {
+        const members = await User.find({ accountType: 'admin' }); // Query by accountType 'member'
+        if (!members.length) {
+            return res.status(404).json({ message: 'No members found' });
+        }
+        res.json(members); // Send the list of members
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error fetching members', error: err.message });
+    }
+});
+
 router.get('/:id', async (req, res) => {
     try{
         const singleUser = await User.findById(req.params.id);
@@ -28,6 +56,8 @@ router.put('/:id', async (req, res) => {
             new: true,
             runValidators: true,
         })
+        response.json(updatedUser);
+        res.status(201).json(newUser);
     }catch(error){
         res.status(400).json({error: 'failed to update User'})
     }
@@ -51,5 +81,4 @@ router.delete('/:id', async (req, res) => {
         res.status(400).json({error: 'failed to delete User'})
     }
 });
-
 module.exports = router;

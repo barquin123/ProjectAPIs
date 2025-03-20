@@ -5,6 +5,7 @@ const cors = require('cors');
 const PORT = process.env.PORT || 5000;
 const taskRoutes = require('./routes/taskRoutes');
 const userRoutes = require('./routes/userRoutes');
+const accountType = require('./routes/accountTypeRoutes');
 const dotenv = require('dotenv');
 dotenv.config();
 
