@@ -1,21 +1,31 @@
 const mongoose = require('mongoose');
-const { schema } = require('./userModel');
-const userSchema = require('./userModel');
+const User = require('./userModel'); // Import User model correctly
+
 const taskSchema = new mongoose.Schema({
     taskName: {
         type: String,
         required: true,
         trim: true,
     },
+    taskDescription: {
+        type: String,
+        required: true,
+        trim: true,
+    },
     assignedBy: {
-        type: schema.Types.ObjectID, 
-        ref: 'User',
+        type: mongoose.Schema.Types.ObjectId, // Correct usage of ObjectId
+        ref: 'User', // Reference to User model
         required: true,
         trim: true,
     },
     assignedTo: {
-        type: schema.Types.ObjectID, 
-        ref: 'User',
+        type: mongoose.Schema.Types.ObjectId, // Correct usage of ObjectId
+        ref: 'User', // Reference to User model
+        required: true,
+        trim: true,
+    },
+    priorityLevel: {
+        type: String,
         required: true,
         trim: true,
     },
@@ -33,4 +43,4 @@ const taskSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Task', taskSchema);
+module.exports = mongoose.model('Task', taskSchema); // Export Task model
