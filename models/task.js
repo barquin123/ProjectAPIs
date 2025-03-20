@@ -37,7 +37,7 @@ const taskSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-    deadLine: {
+    dueDate: {
         type: Date,
         required: true,
     }
