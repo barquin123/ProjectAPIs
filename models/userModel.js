@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
     },
     taskList: [{ 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Task' 
+        ref: 'Task',
     }]
 });
 

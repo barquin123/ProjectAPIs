@@ -4,8 +4,8 @@ const User = require('../models/userModel');
 
 router.get('/', async (req, res) => {
     try{
-        const users = await User.find();
-        // const users = await User.find().populate('taskList', 'taskName status');
+        // const users = await User.find();
+        const users = await User.find().populate('taskList', 'taskName status assignedBy assignedTo priorityLevel createdAt dueDate');
         res.json(users);
     }catch(error){
         res.status(500).json({message: error.message})
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 // Get all members
 router.get('/members', async (req, res) => {
     try {
-        const members = await User.find({ accountType: 'member' }); // Query by accountType 'member'
+        const members = await User.find({ accountType: 'member' }).populate('taskList', 'taskName status assignedBy assignedTo priorityLevel createdAt dueDate'); // Query by accountType 'member'
         if (!members.length) {
             return res.status(404).json({ message: 'No members found' });
         }
@@ -42,7 +42,7 @@ router.get('/admin', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try{
-        const singleUser = await User.findById(req.params.id);
+        const singleUser = await User.findById(req.params.id).populate('taskList', 'taskName status assignedBy assignedTo priorityLevel createdAt dueDate');
         // const singleUser = await User.findById(req.params.id).populate('taskList', 'taskName status');
         res.json(singleUser);
     }catch(error){

@@ -5,7 +5,7 @@ const cors = require('cors');
 const PORT = process.env.PORT || 5000;
 const taskRoutes = require('./routes/taskRoutes');
 const userRoutes = require('./routes/userRoutes');
-const accountType = require('./routes/accountTypeRoutes');
+const authRoutes = require('./routes/authRoutes');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -17,6 +17,7 @@ mongoose.connect(db).then(() =>  console.log('Connected to MongoDB')).catch((err
 
 app.use('/api/tasks', taskRoutes); 
 app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
