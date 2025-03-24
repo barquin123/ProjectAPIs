@@ -47,7 +47,7 @@ router.post('/login', async (req, res) => {
         const { email, password } = req.body;
 
         // Find the user by email
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email }).populate('name email accountType taskList');
         if (!user) {
             return res.status(400).json({ error: 'User not found' });
         }
@@ -57,6 +57,7 @@ router.post('/login', async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ error: 'Invalid credentials' });
         }
+        
 
         // Return a success message or the user data (excluding password)
         res.status(200).json({
