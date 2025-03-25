@@ -24,9 +24,6 @@ router.post('/register', async (req, res) => {
             accountType,
         });
 
-        // Hash the password before saving
-        newUser.password = await bcrypt.hash(newUser.password, 10);
-
         // Save the user to the database
         await newUser.save();
 
@@ -48,7 +45,7 @@ router.post('/login', async (req, res) => {
         const { email, password } = req.body;
 
         // Find the user by email
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email }).select('name email accountType password taskList').populate('taskList', '_id');
         if (!user) {
             return res.status(400).json({ error: 'User not found' });
         }
@@ -62,17 +59,19 @@ router.post('/login', async (req, res) => {
 
         res.status(200).json({
             message: 'User logged in successfully',
+            id : user._id,
             name: user.name,
             email: user.email,
             accountType: user.accountType,
+            taskList: user.taskList,
         });
     } catch (error) {
         res.status(400).json({ error: 'Failed to log in' });
     }
 });
 
+
 // User Logout Route (clear session or token if needed)
-// User Logout Route (clear session)
 router.get('/logout', (req, res) => {
     try {
         // Destroy the session
