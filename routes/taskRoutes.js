@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Task = require('../models/task');
+const User = require('../models/userModel');
 
 router.get('/', async (req, res) => {
     try{
@@ -38,6 +39,13 @@ router.post('/', async (req, res) => {
     try{
         const newtask = new Task(req.body);
         await newtask.save();
+
+         // Update the taskList of the assigned user
+         await User.findByIdAndUpdate(
+            req.body.assignedTo,
+            { $push: { taskList: newtask._id } },
+            { new: true }
+        );
         res.status(201).json(newtask);
     }catch(error){
         res.status(400).json({error: 'failed to create Task'})
@@ -46,8 +54,12 @@ router.post('/', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try{
-        const deletTask = await Task.findByIdAndDelete(req.params.id);
+        const deletedTask = await Task.findByIdAndDelete(req.params.id);
         if (!deletedTask) return res.status(404).json({error: 'No Task found'});
+        await User.findByIdAndUpdate(
+            deletedTask.assignedTo,
+            { $pull: { taskList: deletedTask._id } }
+        );
         res.json({ message: 'Task deleted successfully' });
     }catch(error){
         res.status(400).json({error: 'failed to delete Task'})
