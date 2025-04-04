@@ -42,7 +42,7 @@ router.get('/admin', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try{
-        const singleUser = await User.findById(req.params.id).populate('taskList', 'taskName status assignedBy assignedTo priorityLevel createdAt dueDate');
+        const singleUser = await User.findById(req.params.id).populate({ path: 'taskList', select: 'taskName status assignedBy assignedTo priorityLevel createdAt dueDate', populate: [{ path: 'assignedBy', select: 'name' },{ path: 'assignedTo', select: 'name' }]});
         // const singleUser = await User.findById(req.params.id).populate('taskList', 'taskName status');
         res.json(singleUser);
     }catch(error){

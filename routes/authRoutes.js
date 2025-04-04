@@ -45,7 +45,7 @@ router.post('/login', async (req, res) => {
         const { email, password } = req.body;
 
         // Find the user by email
-        const user = await User.findOne({ email }).select('name _id email accountType password taskList').populate('taskList', '_id taskName assignedBy assignedTo priorityLevel status createdAt dueDate');
+        const user = await User.findOne({ email }).select('name _id email accountType password taskList').populate({path:'taskList', select:'_id taskName assignedBy assignedTo priorityLevel status createdAt dueDate', populate: [{path:'assignedBy', select: 'name'},{path:'assignedTo', select: 'name'}]});
         if (!user) {
             return res.status(400).json({ error: 'User not found' });
         }
