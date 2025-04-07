@@ -10,7 +10,7 @@ const dotenv = require('dotenv');
 const session = require('express-session');
 dotenv.config();
 
-app.use(cors({origin: 'http://localhost:5173', methods: 'GET, POST, PUT, DELETE', allowedHeaders: 'Content-Type, Authorization', credentials: true}));
+app.use(cors({origin: 'https://taskmanagement-cream.netlify.app', methods: 'GET, POST, PUT, DELETE', allowedHeaders: 'Content-Type, Authorization', credentials: true}));
 // app.use(cors({origin: '*', methods: 'GET, POST, PUT, DELETE', allowedHeaders: '*', credentials: true}));
 app.use(express.json());
 
