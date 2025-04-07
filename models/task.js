@@ -29,6 +29,12 @@ const taskSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
+
+    updatedBy: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User',
+    },
+
     status: {
         type: String,
         trim: true,

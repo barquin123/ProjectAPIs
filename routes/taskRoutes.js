@@ -25,15 +25,27 @@ router.get('/:id', async (req,res) => {
 })
 
 router.put('/:id', async (req, res) => {
-    try{
-        const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true,
-        });
-    }catch(error){
-        res.status(400).json({error: 'failed to update Task'})
+    try {
+        // Find the task by ID and update it with the provided data
+        const updatedTask = await Task.findByIdAndUpdate(req.params.id,   
+        {
+            ...req.body,           // Include other fields from the request body
+            updatedBy: req.user._id,  // This is where we add the user ID of the person updating the task
+        },
+         {
+            new: true,  // Return the updated task instead of the old one
+            runValidators: true,  // Ensure validators are run
+        }).populate('assignedBy', 'name email').populate('assignedTo', 'name email').populate('updatedBy', 'name email');
+        if (!updatedTask) {
+            return res.status(404).json({ error: 'Task not found' });
+        }
+
+        // Return the updated task
+        res.json(updatedTask);
+    } catch (error) {
+        res.status(400).json({ error: 'Failed to update Task' });
     }
-})
+});
 
 router.post('/', async (req, res) => {
     try{
