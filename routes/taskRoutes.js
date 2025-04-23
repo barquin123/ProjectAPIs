@@ -30,7 +30,7 @@ router.put('/:id', async (req, res) => {
         const updatedTask = await Task.findByIdAndUpdate(req.params.id,   
         {
             ...req.body,           // Include other fields from the request body
-            updatedBy: req.user._id,  // This is where we add the user ID of the person updating the task
+            updatedBy: req.user ? req.user._id : null,  // This is where we add the user ID of the person updating the task
         },
          {
             new: true,  // Return the updated task instead of the old one
@@ -41,9 +41,11 @@ router.put('/:id', async (req, res) => {
         }
 
         // Return the updated task
+        req.app.get('socketio').emit('taskUpdated', updatedTask);
         res.json(updatedTask);
     } catch (error) {
-        res.status(400).json({ error: 'Failed to update Task' });
+        console.error('Update Task Error:', error); // This logs the actual error
+        res.status(400).json({ error: error.message, details: error.errors });
     }
 });
 
@@ -58,7 +60,10 @@ router.post('/', async (req, res) => {
             { $push: { taskList: newtask._id } },
             { new: true }
         );
+
         res.status(201).json(newtask);
+        // Emit taskCreated only after successful task creation
+        req.app.get('socketio').emit('taskCreated', newtask);
     }catch(error){
         res.status(400).json({error: 'failed to create Task'})
     }
@@ -72,6 +77,7 @@ router.delete('/:id', async (req, res) => {
             deletedTask.assignedTo,
             { $pull: { taskList: deletedTask._id } }
         );
+        req.app.get('socketio').emit('taskDeleted', deletedTask._id);
         res.json({ message: 'Task deleted successfully' });
     }catch(error){
         res.status(400).json({error: 'failed to delete Task'})
