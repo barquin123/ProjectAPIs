@@ -4,6 +4,29 @@ const User = require('../models/userModel');
 const Conversation = require('../models/conversation');
 const Messages = require('../models/messages');
 
+router.post('/start-conversation', async (req, res) => {
+    const { userId, recipientId } = req.body;
+
+    try {
+        // Check if a conversation already exists between these users
+        let conversation = await Conversation.findOne({
+            members: { $all: [userId, recipientId] }
+        });
+
+        if (!conversation) {
+            // Create a new conversation
+            conversation = new Conversation({
+                members: [userId, recipientId]
+            });
+            await conversation.save();
+        }
+
+        res.status(200).json({ success: true, conversation });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Failed to start conversation' });
+    }
+});
 
 router.post('/send', async (req, res) => {
     try {
@@ -71,3 +94,6 @@ router.get('/:conversationId', async (req, res) => {
         res.status(500).json({ message: 'Error fetching conversation data', error: err.message });
     }
 });
+
+
+module.exports = router;
