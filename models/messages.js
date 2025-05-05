@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
 const messagesSchema = new mongoose.Schema({
-    conversationId: {  // Add the conversationId here
-        type: String, // This could also be ObjectId if you want to reference the Conversation model directly
+      conversationId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Conversation', // Reference to the Conversation model
         required: true,
-    },
+      },
     sender: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
