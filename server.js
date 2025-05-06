@@ -50,6 +50,12 @@ app.use('/api/convo', conversationRoutes); // Add this line to include conversat
 
 io.on('connection', (socket) => {
   console.log('New client connected with ID:', socket.id);
+
+  socket.on('joinRoom', (conversationId) => {
+      socket.join(conversationId);
+      console.log(`User joined room: ${conversationId}`);
+  });
+
 });
 
 server.listen(PORT, () => {

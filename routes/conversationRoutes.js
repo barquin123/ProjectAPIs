@@ -40,7 +40,7 @@ router.get('/conversations/:conversationId', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const { userId } = req.params;
     try {
-        const userConversations = await conversation.find({ members: userId });
+        const userConversations = await Conversation.find({ members: userId });
         
         if (!userConversations || userConversations.length === 0) {
             return res.status(404).json({ message: 'No conversations found for this user' });
@@ -68,7 +68,6 @@ router.post('/start-conversation', async (req, res) => {
             });
             await conversation.save();
         }
-
         res.status(200).json({ success: true, conversation });
     } catch (error) {
         console.error(error);
@@ -105,6 +104,8 @@ router.post('/send', async (req, res) => {
         await conversation.save();
 
         // Respond with the saved message data
+        console.log(`Broadcasting message to room: ${conversationId}`);
+        req.app.get('socketio').to(conversationId).emit('newMessage', savedMessage);
         res.status(200).json(savedMessage);
     } catch (err) {
         console.error(err);
