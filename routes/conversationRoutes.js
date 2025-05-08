@@ -38,14 +38,13 @@ router.get('/conversations/:conversationId', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-    const { userId } = req.params;
     try {
-        const userConversations = await Conversation.find({ members: userId });
+        const userConversations = await Conversation.find({ members: req.params.id }).populate('members', 'name').populate('messages', 'text timestamp sender');
         
         if (!userConversations || userConversations.length === 0) {
             return res.status(404).json({ message: 'No conversations found for this user' });
         }
-        res.status(200).json({ success: true, conversations: userConversations });
+        res.status(200).json({ success: true, Conversation: userConversations });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Failed to fetch conversations' });
