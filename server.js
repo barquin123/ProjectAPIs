@@ -10,6 +10,7 @@ const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 const dotenv = require('dotenv');
 const session = require('express-session');
+const conversationRoutes = require('./routes/conversationRoutes');
 dotenv.config();
 
 
@@ -45,9 +46,16 @@ mongoose.connect(db).then(() =>  console.log('Connected to MongoDB')).catch((err
 app.use('/api/tasks', taskRoutes); 
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/convo', conversationRoutes); // Add this line to include conversation routes
 
 io.on('connection', (socket) => {
   console.log('New client connected with ID:', socket.id);
+
+  socket.on('joinRoom', (conversationId) => {
+      socket.join(conversationId);
+      console.log(`User joined room: ${conversationId}`);
+  });
+
 });
 
 server.listen(PORT, () => {
